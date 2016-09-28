@@ -1,0 +1,293 @@
+
+options {
+	IGNORE_CASE = true;
+}
+
+PARSER_BEGIN(comp)
+class comp 
+{
+	public static void main( String[] args )throws ParseException
+	{
+		try
+		{
+			comp analizador = new comp( System.in ) ;
+			analizador.Programa() ; 
+		}
+		catch(ParseException e)
+		{
+			System.out.println(e.getMessage());
+			System.out.println("Analizador: erro durante o processo de análise.");
+		}
+	}
+}
+PARSER_END(comp)
+
+SKIP : 
+{ 
+	" "|"\n" | "\r" | "\r\n" 
+}
+TOKEN:
+{
+	  <TYPES			: "char"|"integer"|"boolean">{System.out.println("TIPO -> "+image);}
+	| <NUMERO 			: (<DIGITOS>)+ > {System.out.print("NUMERO "+image+"\r\n");}
+	| <IDENTIFICADOR 	: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.print("IDENTIFICADOR -> "+image+"\r\n");}
+	| <STRING 			: ["a"-"z","A"-"Z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*>{System.out.print("STRING -> "+image+"\r\n");}
+	| <LETRAS 			: ["a"-"z","A"-"Z"]>
+	| <DIGITOS			: ["0"-"9"]>
+}
+TOKEN : 
+{ 
+	  <MAIS 			: "+" > {System.out.println("MAIS -> "+image+"\r\n");}
+	| <MENOS			:"-">{System.out.println("MENOS -> "+image+"\r\n");}
+	| <MULTIPLICACAO 	:"*">{System.out.println("MULTIPLICACAO -> "+image+"\r\n");}
+	| <DIVISAO			:"div">{System.out.println("DIVISAO -> "+image+"\r\n");}
+	| <INCREMENTO		: "++" >{System.out.println("INCREMENTO -> "+image+"\r\n");}
+	| <DECREMENTO		: "--" >{System.out.println("DECREMENTO -> "+image+"\r\n");}
+	
+}
+TOKEN:
+{
+	  <PROGRAMA: "program " > {System.out.println("PROGRAMA -> "+image);}
+	| <VAR: "var " >{System.out.println("VAR -> "+image);}
+	| <IF: "if " >{System.out.println("IF -> "+image);}
+	| <ELSE:"else " >{System.out.println("ELSE -> "+image);}
+	| <THEN:"then " >{System.out.println("THEN -> "+image);}
+	| <OF:"of " >{System.out.println("OF -> "+image);}
+	| <WHILE:"while " >{System.out.println("WHILE -> "+image);}
+	| <DO: "do " >{System.out.println("DO -> "+image);}
+	| <WRITE:"write " >{System.out.println("WRITE -> "+image);}
+	| <READ:"read " >{System.out.println("READ -> "+image);}
+	| <ARRAY: "array" >{System.out.println("ARRAY -> "+image);}
+	| <BEGIN: "begin " >{System.out.println("BEGIN -> "+image);}
+	| <END: "end " >{System.out.println("END -> "+image);}
+	| <FUNCTION: "function " >{System.out.println("FUNCTION -> "+image);}
+	| <PROCEDURE: "procedure " >{System.out.println("PROCEDURE -> "+image);}
+	| <BOOLEANO: "true"|"false" >{System.out.println("BOOLEANO -> "+image);}
+}
+TOKEN:
+{
+      <ABREPARENTESE: "(" >{System.out.println("ABRE-PARENTESE -> "+image);}
+	| <FECHAPARENTESE: ")" >{System.out.println("FECHA-PARENTESE -> "+image);}
+	| <ABRECOLCHETES: "[" >{System.out.println("ABRE-COLCHETES -> "+image);}
+	| <FECHACOLCHETES: "]" >{System.out.println("FECHA-COLCHETES -> "+image);}
+	| <PONTOVIRGULA: ";" >{System.out.println("PONTO E VIRGULA -> "+image);}
+	| <VIRGULA: "," >{System.out.println("VIRGULA -> "+image);}
+	| <PONTO: "." >{System.out.println("PONTO -> "+image);}
+	| <DOISPONTOS: ":" >{System.out.println("DOIS-PONTOS -> "+image);}
+	| <ASPASIMPLES: "'" >{System.out.println("ASPASIMPLES -> "+image);}
+	| <ASPASDUPLA: "\"" >{System.out.println("ASPASDUPLA -> "+image);}
+}
+TOKEN:
+{
+	  <IGUAL : "="> {System.out.println("IGUAL -> "+image+"\r\n");}
+	| <ATRIBUICAO : ":="> {System.out.println("ATRIBUICAO -> "+image+"\r\n");}
+	| <MENORIGUAL: "<=" >{System.out.println("MENOR IGUAL -> "+image);}
+	| <MAIORIGUAL: ">=" >{System.out.println("MAIOR IGUAL -> "+image);}
+	| <DIFERENTE: "<>" >{System.out.println("DIFERENTE -> "+image);}
+	| <MENOR: "< " >{System.out.println("MENOR -> "+image);}
+	| <MAIOR: "> " >{System.out.println("MAIOR -> "+image);}
+	| <PONTOS: ".. " >{System.out.println("PONTOS -> "+image);}
+	| <OR: "or" >{System.out.println("OR -> "+image);}
+	| <AND: "and">{System.out.println("AND -> "+image);}
+	| <NOT: "not">{System.out.println("NOT -> "+image);}
+}
+
+void Programa() :
+{}
+{
+	Program()<EOF>
+}
+
+void Program():
+{}
+{
+  <PROGRAMA><IDENTIFICADOR><PONTOVIRGULA>Block()<PONTO>
+}
+
+void Block():
+{}
+{
+  VariableDeclarationPart()StatementPart()
+}
+
+void VariableDeclarationPart():
+{}
+{
+	<EOF> | <VAR>VariableDeclaration()<PONTOVIRGULA> (VariableDeclaration()<PONTOVIRGULA>)*
+}
+
+void VariableDeclaration():
+{}
+{
+	<IDENTIFICADOR> (<VIRGULA><IDENTIFICADOR>)*<DOISPONTOS>Type()
+}
+
+void Type():
+{}
+{
+	<TYPES> | ArrayType()
+}
+
+void ArrayType():
+{}
+{
+	<ARRAY><ABRECOLCHETES>IndexRange()<FECHACOLCHETES><OF><TYPES>
+}
+
+void IndexRange():
+{}
+{
+	<NUMERO><PONTOS><NUMERO>
+}
+
+void StatementPart():
+{}
+{
+	CompoundStatement()
+}
+
+void CompoundStatement():
+{}
+{
+	<BEGIN>Statement()(<PONTOVIRGULA>Statement())*<END>
+}
+
+void Statement():
+{}
+{
+	SimpleStatement() | StructuredStatement()
+}
+
+void SimpleStatement():
+{}
+{
+	AssignmentStatement() | ReadStatement() | WriteStatement()
+}
+
+void AssignmentStatement():
+{}
+{
+	Variable()<ATRIBUICAO>Expression()
+}
+
+void ReadStatement():
+{}
+{
+	<READ><ABREPARENTESE>Variable() (<VIRGULA>Variable())*<FECHAPARENTESE>
+}
+
+void WriteStatement():
+{}
+{
+	<WRITE><ABREPARENTESE>Variable() (<VIRGULA>Variable())*<FECHAPARENTESE>
+}
+
+void StructuredStatement():
+{}
+{
+  	CompoundStatement() | IfStatement() | WhileStatement()
+}
+
+void IfStatement():
+{}
+{
+  	<IF>Expression()<THEN>Statement()IfStatementFatoracao()
+}
+
+void IfStatementFatoracao():
+{}
+{
+  	<ELSE>Statement() | {}
+}
+
+void WhileStatement():
+{}
+{
+  	<WHILE>Expression()<DO>Statement()
+}
+
+void Expression():
+{}
+{
+  	SimpleExpression()ExpressionFatoracao()
+}
+
+void ExpressionFatoracao():
+{}
+{
+	RelationalOperator()SimpleExpression() | {}
+}
+
+void SimpleExpression():
+{}
+{
+  	Sign()Term() (AddingOperator()Term())*
+}
+
+void Term():
+{}
+{
+	Factor() (MultiplyingOperator()Factor())*
+}
+
+void Factor():
+{}
+{
+  	Variable() | Constant() |
+  	<ABREPARENTESE>Expression()<FECHAPARENTESE> |
+  	<NOT>Factor()
+}
+
+void RelationalOperator():
+{}
+{
+  	<IGUAL> | <DIFERENTE> | <MENOR> | <MENORIGUAL> | <MAIORIGUAL> | <MAIOR> | <OR> | <AND>
+}
+
+void Sign():
+{}
+{
+  	<MAIS> | <MENOS> | {}
+}
+
+void AddingOperator():
+{}
+{
+  	<MAIS> | <MENOS>
+}
+
+void MultiplyingOperator():
+{}
+{
+  	<MULTIPLICACAO> | <DIVISAO>
+}
+
+void Variable():
+{}
+{
+  	<IDENTIFICADOR>IndexedVariable()
+}
+
+void IndexedVariable():
+{}
+{
+  	<ABRECOLCHETES>Expression()<FECHACOLCHETES> | {}
+}
+
+void Constant():
+{}
+{
+  	<NUMERO> | CharacterConstant() | <IDENTIFICADOR>
+}
+
+void LetterOrDigit():
+{}
+{
+	<LETRAS> | <DIGITOS>
+}
+
+void CharacterConstant():
+{}
+{
+  	<ASPASIMPLES>LetterOrDigit()<ASPASIMPLES> | <ASPASDUPLA>LetterOrDigit()(LetterOrDigit())*<ASPASDUPLA>
+}
