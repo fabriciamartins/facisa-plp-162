@@ -28,6 +28,25 @@ SKIP :
 }
 TOKEN:
 {
+	  <PROGRAMA: "program " > {System.out.println("PROGRAMA -> "+image);}
+	| <VAR: "var " >{System.out.println("VAR -> "+image);}
+	| <IF: "if " >{System.out.println("IF -> "+image);}
+	| <ELSE:"else " >{System.out.println("ELSE -> "+image);}
+	| <THEN:"then " >{System.out.println("THEN -> "+image);}
+	| <OF:"of " >{System.out.println("OF -> "+image);}
+	| <WHILE:"while " >{System.out.println("WHILE -> "+image);}
+	| <DO: "do " >{System.out.println("DO -> "+image);}
+	| <WRITE:"write" >{System.out.println("WRITE -> "+image);}
+	| <READ:"read" >{System.out.println("READ -> "+image);}
+	| <ARRAY: "array" >{System.out.println("ARRAY -> "+image);}
+	| <BEGIN: "begin" >{System.out.println("BEGIN -> "+image);}
+	| <END: "end" >{System.out.println("END -> "+image);}
+	| <FUNCTION: "function " >{System.out.println("FUNCTION -> "+image);}
+	| <PROCEDURE: "procedure" >{System.out.println("PROCEDURE -> "+image);}
+	| <BOOLEANO: "true"|"false" >{System.out.println("BOOLEANO -> "+image);}
+}
+TOKEN:
+{
 	  <TYPES			: "char"|"integer"|"boolean">{System.out.println("TIPO -> "+image);}
 	| <NUMERO 			: (<DIGITOS>)+ > {System.out.print("NUMERO "+image+"\r\n");}
 	| <IDENTIFICADOR 	: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*> {System.out.print("IDENTIFICADOR -> "+image+"\r\n");}
@@ -44,25 +63,6 @@ TOKEN :
 	| <INCREMENTO		: "++" >{System.out.println("INCREMENTO -> "+image+"\r\n");}
 	| <DECREMENTO		: "--" >{System.out.println("DECREMENTO -> "+image+"\r\n");}
 	
-}
-TOKEN:
-{
-	  <PROGRAMA: "program " > {System.out.println("PROGRAMA -> "+image);}
-	| <VAR: "var " >{System.out.println("VAR -> "+image);}
-	| <IF: "if " >{System.out.println("IF -> "+image);}
-	| <ELSE:"else " >{System.out.println("ELSE -> "+image);}
-	| <THEN:"then " >{System.out.println("THEN -> "+image);}
-	| <OF:"of " >{System.out.println("OF -> "+image);}
-	| <WHILE:"while " >{System.out.println("WHILE -> "+image);}
-	| <DO: "do " >{System.out.println("DO -> "+image);}
-	| <WRITE:"write " >{System.out.println("WRITE -> "+image);}
-	| <READ:"read " >{System.out.println("READ -> "+image);}
-	| <ARRAY: "array" >{System.out.println("ARRAY -> "+image);}
-	| <BEGIN: "begin " >{System.out.println("BEGIN -> "+image);}
-	| <END: "end " >{System.out.println("END -> "+image);}
-	| <FUNCTION: "function " >{System.out.println("FUNCTION -> "+image);}
-	| <PROCEDURE: "procedure " >{System.out.println("PROCEDURE -> "+image);}
-	| <BOOLEANO: "true"|"false" >{System.out.println("BOOLEANO -> "+image);}
 }
 TOKEN:
 {
